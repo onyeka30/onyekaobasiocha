@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Portfolio | Onyeka Obasiocha</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .project-card {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Modal specific styles from project1 */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+        }
+        
+        .modal-content {
+            background-color: #1f2937;
+            margin: 5% auto; /* 15% from the top and centered */
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .category-badge {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+        
+        /* Additional styles for better compatibility */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .tech-tag {
+            transition: all 0.3s ease;
+        }
+        
+        .tech-tag:hover {
+            transform: translateY(-2px);
+        }
+        
+        .live-demo-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .count-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+        
+        .no-projects {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        /* New style for floating WhatsApp button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366; /* WhatsApp Green */
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <nav class="fixed top-0 w-full z-50 bg-gray-800 shadow-md">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                        <i data-feather="terminal" class="w-6 h-6"></i>
+                    </div>
+                    <a href="index.html" class="text-xl font-bold hover:text-purple-400 transition-colors">Onyeka Obasiocha</a>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html#home" class="nav-link hover:text-purple-400">Home</a>
+                    <a href="index.html#about" class="nav-link hover:text-purple-400">About</a>
+                    <a href="index.html#skills" class="nav-link hover:text-purple-400">Skills</a>
+                    <a href="#projects" class="nav-link text-purple-400">Projects</a>
+                    <a href="index.html#services" class="nav-link hover:text-purple-400">Services</a>
+                    <a href="index.html#contact" class="nav-link hover:text-purple-400">Contact</a>
+                </div>
+                
+                <button id="mobile-menu-btn" class="md:hidden">
+                    <i data-feather="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
+                <a href="index.html" class="block py-2 hover:text-purple-400">Home</a>
+                <a href="#index.html#About" class="block py-2 hover:text-purple-400">About</a>
+                <a href="index.html#skills" class="block py-2 hover:text-purple-400">Skills</a>
+                <a href="#projects" class="block py-2 text-purple-400">Projects</a>
+                <a href="index.html#services" class="block py-2 hover:text-purple-400">Services</a>
+                <a href="index.html.html#contact" class="block py-2 hover:text-purple-400">Contact</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section id="projects" class="pt-32 pb-20 bg-gradient-to-br from-gray-800 to-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">
+                    My <span class="gradient-text">Projects</span>
+                </h1>
+                <p class="text-gray-300 text-lg max-w-3xl mx-auto">
+                    Explore my collection of 60+ projects spanning web designs, applications, and DevOps solutions. 
+                    Each project represents unique challenges and innovative solutions.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                <div class="project-card bg-gray-800 p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold gradient-text mb-2">60</div>
+                    <div class="text-gray-300">Total Projects</div>
+                </div>
+                <div class="project-card bg-gray-800 p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold gradient-text mb-2">15+</div>
+                    <div class="text-gray-300">Web Designs</div>
+                </div>
+                <div class="project-card bg-gray-800 p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold gradient-text mb-2">15+</div>
+                    <div class="text-gray-300">Applications</div>
+                </div>
+                <div class="project-card bg-gray-800 p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold gradient-text mb-2">15+</div>
+                    <div class="text-gray-300">DevOps</div>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-12" id="filter-buttons">
+                <button type="button" class="filter-btn px-6 py-2 rounded-full font-semibold transition duration-300 bg-indigo-600 text-white hover:bg-indigo-700" data-filter="All">
+                    All Projects <span class="count-badge">60</span>
+                </button>
+                <button type="button" class="filter-btn px-6 py-2 rounded-full font-semibold transition duration-300 bg-gray-700 text-gray-300 hover:bg-gray-600" data-filter="Web Designs">
+                    Web Designs <span class="count-badge">15+</span>
+                </button>
+                <button type="button" class="filter-btn px-6 py-2 rounded-full font-semibold transition duration-300 bg-gray-700 text-gray-300 hover:bg-gray-600" data-filter="Applications">
+                    Applications <span class="count-badge">15+</span>
+                </button>
+                <button type="button" class="filter-btn px-6 py-2 rounded-full font-semibold transition duration-300 bg-gray-700 text-gray-300 hover:bg-gray-600" data-filter="DevOps">
+                    DevOps <span class="count-badge">15+</span>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="py-12 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+            
+            <div class="flex justify-center items-center space-x-4 mt-12">
+                <button id="prev-page" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <i data-feather="arrow-left" class="w-5 h-5 inline-block mr-1"></i> Previous
+                </button>
+                <span class="text-gray-300 font-medium" id="page-info">Page 1 of 7</span>
+                <button id="next-page" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700">
+                    Next <i data-feather="arrow-right" class="w-5 h-5 inline-block ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('project-modal').style.display='none'">&times;</span>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <h3 id="modal-title" class="text-3xl font-bold mb-3 text-white">Project Title</h3>
+                    <div class="mb-4">
+                        <span id="modal-badge" class="category-badge">Category</span>
+                    </div>
+                    
+                    <p id="modal-description" class="text-gray-300 leading-relaxed mb-6">Full description of the project.</p>
+
+                    <h4 class="text-xl font-semibold mb-3 border-b pb-1 text-white">Key Features</h4>
+                    <ul id="modal-features" class="space-y-2 text-gray-300 mb-6">
+                        </ul>
+
+                    <h4 class="text-xl font-semibold mb-3 border-b pb-1 text-white">Technology Stack</h4>
+                    <div id="modal-tech" class="flex flex-wrap gap-2">
+                        </div>
+                </div>
+                <div class="lg:col-span-1 bg-gray-800 p-6 rounded-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-white">Actions</h4>
+                    <a id="modal-live" href="#" target="_blank" class="w-full mb-3 inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150">
+                        <i data-feather="external-link" class="w-5 h-5 mr-2"></i> View Live Project
+                    </a>
+                    <a id="modal-github" href="#" target="_blank" class="w-full inline-flex items-center justify-center px-5 py-3 border border-gray-600 text-base font-medium rounded-md text-gray-300 bg-gray-700 hover:bg-gray-600 transition duration-150">
+                        <i data-feather="github" class="w-5 h-5 mr-2"></i> View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="py-8 bg-gray-800 border-t border-gray-700">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">
+                    © 2026 Onyeka Obasiocha. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="https://github.com/onyeka30" class="text-gray-400 hover:text-purple-400 transition-colors">
+                        <i data-feather="github" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/onyeka-obasiocha/" class="text-gray-400 hover:text-purple-400 transition-colors">
+                        <i data-feather="linkedin" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://x.com/onyeka_01" class="text-gray-400 hover:text-purple-400 transition-colors">
+                        <i data-feather="twitter" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://www.instagram.com/onyeka_51/" class="text-gray-400 hover:text-purple-400 transition-colors">
+                        <i data-feather="instagram" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <a href="https://wa.me/27604881413" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.515.068 7.842c0 1.454.49 2.853 1.352 4.044L.5 16l3.592-.954a7.66 7.66 0 0 0 4.062 1.272c4.327 0 7.852-3.515 7.852-7.842a7.841 7.841 0 0 0-2.206-5.418m-2.454 1.428a6.38 6.38 0 0 1 1.748 4.148 6.38 6.38 0 0 1-1.748 4.148l-.105.062-2.147.568.568-2.147.062-.105a6.38 6.38 0 0 1-4.148-1.748 6.38 6.38 0 0 1-1.748-4.148A6.38 6.38 0 0 1 5.994 3.75a6.38 6.38 0 0 1 4.148 1.748zM9.818 7.28c-.105-.157-.597-.314-.73-.314s-.266-.052-.387-.03c-.121.021-.299.043-.456.22c-.157.177-.604.597-.73 1.085s-.256.76-.052 1.268c.205.508.625.685 1.085.873.46.188.948.337 1.346.314s.73-.205.82-.41a1.076 1.076 0 0 0 .148-.34c.03-.121.03-.22-.09-.328-.12-.112-.456-.21-.643-.306s-.37-.41-.53-.667c-.16-.256-.157-.235-.306-.412s-.22-.19-.314-.242z" fill="white"/>
+        </svg>
+    </a>
+
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+        
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // --- Project Data from project1.html ---
+        const projectsData = [
+            // Web Designs (20 projects) - Purple Badge
+            { id: 1, title: "Modern E-Commerce Site", category: "Web Designs", description: "A sleek, responsive e-commerce platform built with Tailwind CSS and modern JavaScript practices. Focus on UX and mobile-first design.", technologies: ["HTML", "Tailwind CSS", "JavaScript"], features: ["Mobile-first responsive design", "Shopping cart logic", "Product filtering"], liveUrl: "#", githubUrl: "#" },
+            { id: 2, title: "Corporate Landing Page", category: "Web Designs", description: "A clean and professional one-page website for a consulting firm, emphasizing brand identity and calls-to-action.", technologies: ["HTML", "Bootstrap", "jQuery"], features: ["Parallax scrolling effect", "Contact form integration", "Cross-browser compatibility"], liveUrl: "#", githubUrl: "#" },
+            { id: 3, title: "Photography Portfolio", category: "Web Designs", description: "An elegant, minimal portfolio showcasing high-resolution imagery with a gallery lightbox feature.", technologies: ["React", "Styled Components"], features: ["Infinite scroll gallery", "Image pre-loading", "Custom transitions"], liveUrl: "#", githubUrl: "#" },
+            { id: 4, title: "Food Blog Layout", category: "Web Designs", description: "A vibrant food blog design with recipe cards and category sorting. Optimized for fast loading times.", technologies: ["HTML", "CSS Grid", "Netlify CMS"], features: ["Recipe rating system", "Printable recipe view", "Optimized image delivery"], liveUrl: "#", githubUrl: "#" },
+            { id: 5, title: "Travel Agency Site Redesign", category: "Web Designs", description: "Complete visual and structural redesign of an existing travel agency website to boost bookings.", technologies: ["Vue.js", "SASS"], features: ["Interactive map display", "Dynamic pricing calculator", "User review section"], liveUrl: "#", githubUrl: "#" },
+            { id: 6, title: "Music Streaming Landing", category: "Web Designs", description: "A promotional site for a new music streaming service, featuring a dark theme and custom animations.", technologies: ["HTML", "CSS", "GSAP"], features: ["Animated hero section", "Responsive layout", "Subscription form integration"], liveUrl: "#", githubUrl: "#" },
+            { id: 7, title: "Educational Platform Interface", category: "Web Designs", description: "Design of a dashboard and course view for an online learning management system (LMS).", technologies: ["Angular", "TypeScript"], features: ["Progress tracking bar", "Video player integration", "Quiz module interface"], liveUrl: "#", githubUrl: "#" },
+            { id: 8, title: "Fitness Tracking App Mockup", category: "Web Designs", description: "Visual design and front-end development of a mobile-first fitness application dashboard.", technologies: ["React Native Web", "Tailwind CSS"], features: ["Metric charts (Recharts)", "Goal setting interface", "Activity log view"], liveUrl: "#", githubUrl: "#" },
+            { id: 9, title: "SaaS Product Showcase", category: "Web Designs", description: "A professional site highlighting the features and pricing tiers of a fictional B2B software product.", technologies: ["Next.js", "Vercel"], features: ["Pricing table switcher", "Detailed feature comparison", "SEO optimization"], liveUrl: "#", githubUrl: "#" },
+            { id: 10, title: "Interior Design Lookbook", category: "Web Designs", description: "A visually rich gallery and lookbook site for an interior design studio.", technologies: ["Gatsby", "GraphQL"], features: ["Filterable project gallery", "Image zoom functionality", "Modern typographic hierarchy"], liveUrl: "#", githubUrl: "#" },
+            { id: 11, title: "Book Store Front", category: "Web Designs", description: "A clean interface for browsing and purchasing books, focused on typography and minimal design.", technologies: ["HTML", "CSS", "Alpine.js"], features: ["Book details modal", "Genre filtering", "Search functionality"], liveUrl: "#", githubUrl: "#" },
+            { id: 12, title: "Podcast Network Hub", category: "Web Designs", description: "A centralized website for a network of podcasts, with embedded players and episode lists.", technologies: ["WordPress Theme Development", "PHP"], features: ["Custom post types for episodes", "Embedded audio player", "Show notes display"], liveUrl: "#", githubUrl: "#" },
+            { id: 13, title: "Real Estate Listing Platform", category: "Web Designs", description: "Design of a property listing page with advanced search and filtering options.", technologies: ["React", "Redux"], features: ["Advanced search filters", "Map integration (Leaflet)", "Image carousel"], liveUrl: "#", githubUrl: "#" },
+            { id: 14, title: "Personal Branding Site", category: "Web Designs", description: "A dynamic one-page site for a freelancer, serving as a resume and contact point.", technologies: ["Svelte", "TypeScript"], features: ["Animated skill bars", "Downloadable PDF resume", "Modern SVG illustrations"], liveUrl: "#", githubUrl: "#" },
+            { id: 15, title: "Non-Profit Organization Site", category: "Web Designs", description: "A professional website designed to drive donations and showcase organizational impact.", technologies: ["Drupal", "PHP"], features: ["Donation form integration", "Event calendar", "Impact report section"], liveUrl: "#", githubUrl: "#" },
+            { id: 16, title: "Game Studio Showcase", category: "Web Designs", description: "A futuristic design to showcase video game titles, trailers, and news updates.", technologies: ["HTML", "CSS", "WebGL (Basic)"], features: ["Interactive hero background", "Trailer embedding", "News feed"], liveUrl: "#", githubUrl: "#" },
+            { id: 17, title: "Financial Dashboard UI", category: "Web Designs", description: "A clean, data-driven user interface for monitoring personal financial transactions and balances.", technologies: ["React", "D3.js"], features: ["Interactive charts and graphs", "Transaction listing table", "Account summary widgets"], liveUrl: "#", githubUrl: "#" },
+            { id: 18, title: "Event Ticketing Platform", category: "Web Designs", description: "The front-end interface for searching, selecting seats, and purchasing tickets for live events.", technologies: ["Vue.js", "Element UI"], features: ["Interactive seat map", "Event listing view", "Checkout flow mockup"], liveUrl: "#", githubUrl: "#" },
+            { id: 19, title: "Car Repair Shop Site", category: "Web Designs", description: "A local business website focused on service listings, testimonials, and online appointment booking.", technologies: ["HTML", "Tailwind CSS", "JavaScript"], features: ["Service menu display", "Testimonial carousel", "Booking form"], liveUrl: "#", githubUrl: "#" },
+            { id: 20, title: "Recipe Aggregator Interface", category: "Web Designs", description: "A comprehensive interface for searching and saving recipes from various sources.", technologies: ["React", "Context API"], features: ["Recipe search and filter", "User account integration", "Saving favorite recipes"], liveUrl: "#", githubUrl: "#" },
+
+            // Applications (20 projects) - Green Badge
+            { id: 21, title: "Task Management PWA", category: "Applications", description: "A fully functional Progressive Web App (PWA) for managing daily tasks and projects, featuring offline support.", technologies: ["Vue.js", "IndexedDB", "PWA Manifest"], features: ["Offline synchronization", "Drag-and-drop task reordering", "Daily habit tracking"], liveUrl: "#", githubUrl: "#" },
+            { id: 22, title: "Simple CRM Backend", category: "Applications", description: "A RESTful API built to manage customer relationships, contacts, and sales leads.", technologies: ["Node.js", "Express", "MongoDB"], features: ["API authentication (JWT)", "CRUD operations for leads", "Filtering and sorting endpoints"], liveUrl: "#", githubUrl: "#" },
+            { id: 23, title: "Real-time Chat App", category: "Applications", description: "A simple chat application supporting multiple rooms and instant message delivery.", technologies: ["React", "Socket.IO", "Node.js"], features: ["Multi-room support", "Real-time message updates", "User status indicators"], liveUrl: "#", githubUrl: "#" },
+            { id: 24, title: "URL Shortener Service", category: "Applications", description: "A microservice that accepts long URLs and returns short, unique links.", technologies: ["Python (Flask)", "Redis"], features: ["Rate limiting", "Custom short links", "Click tracking analytics"], liveUrl: "#", githubUrl: "#" },
+            { id: 25, title: "Book Inventory System", category: "Applications", description: "A full-stack application for tracking inventory, managing authors, and processing book orders.", technologies: ["Java (Spring Boot)", "MySQL"], features: ["User authentication and roles", "Inventory reporting", "Transaction history"], liveUrl: "#", githubUrl: "#" },
+            { id: 26, title: "Weather Forecast API Client", category: "Applications", description: "A front-end app that consumes a third-party weather API and displays forecasts visually.", technologies: ["React", "Axios", "OpenWeatherMap API"], features: ["Location search by name", "5-day forecast display", "Temperature unit toggling"], liveUrl: "#", githubUrl: "#" },
+            { id: 27, title: "Expense Tracker API", category: "Applications", description: "An API focused on managing personal or small-business expenses, supporting tagging and monthly summaries.", technologies: ["Go", "PostgreSQL"], features: ["Monthly expense aggregation", "Category tagging", "Secure data storage"], liveUrl: "#", githubUrl: "#" },
+            { id: 28, title: "Image Processing Service", category: "Applications", description: "A command-line tool or microservice for resizing, cropping, and applying filters to images.", technologies: ["Python (Pillow)", "AWS Lambda (Simulated)"], features: ["Batch processing support", "Image format conversion", "Simple filter application"], liveUrl: "#", githubUrl: "#" },
+            { id: 29, title: "Simple E-Voting System", category: "Applications", description: "A secure, blockchain-inspired application for decentralized voting (simulated consensus).", technologies: ["Node.js", "Web3.js (Conceptual)"], features: ["Immutable voting records", "Voter registration logic", "Encrypted vote casting"], liveUrl: "#", githubUrl: "#" },
+            { id: 30, title: "Online Quiz Platform", category: "Applications", description: "A web application allowing users to create, take, and grade multiple-choice quizzes.", technologies: ["PHP (Laravel)", "Blade Templates"], features: ["Quiz creation interface", "Automatic grading", "User score leaderboards"], liveUrl: "#", githubUrl: "#" },
+            { id: 31, title: "Cryptocurrency Price Tracker", category: "Applications", description: "A dashboard that fetches and displays real-time prices and market data for selected cryptocurrencies.", technologies: ["React", "CoinGecko API", "Chart.js"], features: ["Real-time data updates", "Price history graphs", "Watchlist functionality"], liveUrl: "#", githubUrl: "#" },
+            { id: 32, title: "Fitness API Client", category: "Applications", description: "An application to interact with a health API, visualizing user steps and caloric burn over time.", technologies: ["Angular", "RxJS"], features: ["Time-series data visualization", "Data fetching service", "User profile management"], liveUrl: "#", githubUrl: "#" },
+            { id: 33, title: "Blog Content Management", category: "Applications", description: "A lightweight content management system (CMS) focused solely on writing and publishing blog posts.", technologies: ["Node.js", "HBS (Handlebars)", "SQLite"], features: ["WYSIWYG editor integration", "Draft/Publish functionality", "Simple commenting system"], liveUrl: "#", githubUrl: "#" },
+            { id: 34, title: "Personal Budgeting Tool", category: "Applications", description: "An application to track income, expenses, and categorize spending, providing monthly budget reports.", technologies: ["Python (Django)", "SQLite"], features: ["Category-based budgeting", "Monthly report generation", "Data persistence"], liveUrl: "#", githubUrl: "#" },
+            { id: 35, title: "Recipe Finder Tool", category: "Applications", description: "Searches external recipe databases based on ingredients the user currently has in stock.", technologies: ["React", "Edamam API"], features: ["Ingredient list input", "Recipe search filtering", "Recipe card display"], liveUrl: "#", githubUrl: "#" },
+            { id: 36, title: "Note Taking App", category: "Applications", description: "A simple, collaborative note-taking application with real-time saving.", technologies: ["Vue.js", "Firebase Firestore"], features: ["Real-time synchronization", "User authentication", "Rich text editing (Conceptual)"], liveUrl: "#", githubUrl: "#" },
+            { id: 37, title: "File Upload Manager", category: "Applications", description: "A simple backend service for securely uploading files to a cloud storage provider.", technologies: ["Node.js", "AWS S3 (Conceptual)"], features: ["File validation (size, type)", "Secure pre-signed URLs", "File listing"], liveUrl: "#", githubUrl: "#" },
+            { id: 38, title: "Geo-location Tracker", category: "Applications", description: "A mock application that uses browser geolocation to display the user's current location on a map.", technologies: ["JavaScript", "Leaflet.js", "Geolocation API"], features: ["Current location display", "Reverse geocoding (mock)", "Location tracking (Conceptual)"], liveUrl: "#", githubUrl: "#" },
+            { id: 39, title: "Kanban Board Clone", category: "Applications", description: "A simplified Trello/Kanban board clone supporting dragging and dropping tasks between columns.", technologies: ["React", "DND Kit"], features: ["Drag-and-drop functionality", "Column creation", "Task editing"], liveUrl: "#", githubUrl: "#" },
+            { id: 40, title: "API Documentation Generator", category: "Applications", description: "A tool that parses source code comments (JSDoc/PHPDoc) and generates human-readable API documentation.", technologies: ["Python", "Sphinx"], features: ["Source code parsing", "Markdown output generation", "Template customization"], liveUrl: "#", githubUrl: "#" },
+
+            // DevOps (20 projects) - Blue Badge
+            { id: 41, title: "Terraform AWS Deployment", category: "DevOps", description: "Infrastructure-as-Code (IaC) configuration using Terraform to provision VPC, EC2, and S3 resources on AWS.", technologies: ["Terraform", "AWS", "HCL"], features: ["VPC networking setup", "S3 static site hosting", "EC2 instance provisioning"], liveUrl: "#", githubUrl: "#" },
+            { id: 42, title: "Jenkins CI/CD Pipeline", category: "DevOps", description: "A comprehensive Jenkins Pipeline (Groovy DSL) for automated build, test, and deployment of a Java application.", technologies: ["Jenkins", "Groovy", "Maven"], features: ["Automated testing stage", "Nexus artifact deployment", "Slack notification integration"], liveUrl: "#", githubUrl: "#" },
+            { id: 43, title: "Kubernetes Microservice Deployment", category: "DevOps", description: "Deployment files (YAML) for a multi-container application using Kubernetes Deployments, Services, and Ingress.", technologies: ["Kubernetes", "Docker", "Helm (Conceptual)"], features: ["Service discovery", "Horizontal Pod Autoscaling (HPA) setup", "ConfigMaps usage"], liveUrl: "#", githubUrl: "#" },
+            { id: 44, title: "Ansible Server Configuration", category: "DevOps", description: "Ansible playbooks (YAML) for idempotent configuration of Ubuntu servers, including user and software installation.", technologies: ["Ansible", "YAML", "SSH"], features: ["User creation and SSH key setup", "Nginx installation and configuration", "System package management"], liveUrl: "#", githubUrl: "#" },
+            { id: 45, title: "Dockerizing a Python App", category: "DevOps", description: "Creating a multi-stage Dockerfile and Docker Compose setup for a Python/Django application with PostgreSQL.", technologies: ["Docker", "Docker Compose", "Python"], features: ["Multi-stage build optimization", "Volume mapping for data persistence", "Network configuration"], liveUrl: "#", githubUrl: "#" },
+            { id: 46, title: "GitLab CI/CD for Static Site", category: "DevOps", description: "Setting up a `.gitlab-ci.yml` file to build a static site and deploy it to GitLab Pages.", technologies: ["GitLab CI", "YAML", "Static Site Generator (Mock)"], features: ["Automated build process", "Deployment stage", "Cache management"], liveUrl: "#", githubUrl: "#" },
+            { id: 47, title: "Prometheus & Grafana Monitoring", category: "DevOps", description: "Configuration files for Prometheus and Grafana to monitor Docker container metrics and visualize performance.", technologies: ["Prometheus", "Grafana", "Docker"], features: ["Node Exporter integration", "Custom Grafana dashboard setup", "Alerting rules (Conceptual)"], liveUrl: "#", githubUrl: "#" },
+            { id: 48, title: "Serverless Deployment (Lambda)", category: "DevOps", description: "Using the Serverless Framework to deploy a simple Node.js API endpoint to AWS Lambda and API Gateway.", technologies: ["Serverless Framework", "AWS Lambda", "Node.js"], features: ["API Gateway setup", "Environment variable management", "Basic logging"], liveUrl: "#", githubUrl: "#" },
+            { id: 49, title: "Bash Scripting for Backups", category: "DevOps", description: "A robust set of Bash scripts for automated nightly database backups and rotation.", technologies: ["Bash Scripting", "Cron", "SSH"], features: ["Timestamped backups", "Log file generation", "Retention policy (rotation)"], liveUrl: "#", githubUrl: "#" },
+            { id: 50, title: "Azure DevOps Pipeline for .NET", category: "DevOps", description: "A YAML pipeline definition in Azure DevOps to build and publish a .NET Core application.", technologies: ["Azure DevOps", ".NET Core", "YAML"], features: ["Build agent configuration", "Testing tasks integration", "Artifact publishing"], liveUrl: "#", githubUrl: "#" },
+            { id: 51, title: "GCP Kubernetes Engine Setup", category: "DevOps", description: "Using `gcloud` commands and YAML manifests to set up a GKE cluster and deploy a sample application.", technologies: ["GCP (GKE)", "kubectl", "Helm (Conceptual)"], features: ["Cluster provisioning", "Load Balancer Service creation", "Traffic routing"], liveUrl: "#", githubUrl: "#" },
+            { id: 52, title: "Security Group Hardening", category: "DevOps", description: "A review and refinement of AWS Security Group rules to enforce principle of least privilege.", technologies: ["AWS (Security Groups)", "Networking"], features: ["Inbound/Outbound rule review", "CIDR block restriction", "Jumphost setup (Conceptual)"], liveUrl: "#", githubUrl: "#" },
+            { id: 53, title: "Local Development with Vagrant", category: "DevOps", description: "A Vagrantfile setup to create a consistent local development environment using VirtualBox.", technologies: ["Vagrant", "VirtualBox", "Shell Provisioning"], features: ["Shared folder setup", "Network configuration", "Software provisioning"], liveUrl: "#", githubUrl: "#" },
+            { id: 54, title: "Automated Certificate Renewal", category: "DevOps", description: "Using Certbot and a cron job to automate the generation and renewal of SSL/TLS certificates.", technologies: ["Certbot", "Nginx", "Cron"], features: ["Automatic renewal configuration", "Webroot authentication", "Nginx configuration"], liveUrl: "#", githubUrl: "#" },
+            { id: 55, title: "Chaos Engineering Simulation", category: "DevOps", description: "A simple script to simulate a failure (e.g., stopping a service) to test system resilience (Conceptual).", technologies: ["Bash", "Linux Service Management"], features: ["Service disruption simulation", "Health check monitoring", "Automated rollback (Conceptual)"], liveUrl: "#", githubUrl: "#" },
+            { id: 56, title: "Log Aggregation with ELK Stack", category: "DevOps", description: "Configuration of Filebeat to send application logs to an Elasticsearch/Kibana setup (Conceptual).", technologies: ["Elasticsearch", "Logstash", "Kibana (ELK)"], features: ["Log ingestion configuration", "Kibana dashboard setup", "Log filtering"], liveUrl: "#", githubUrl: "#" },
+            { id: 57, title: "GitHub Actions CI/CD", category: "DevOps", description: "A workflow file to run unit tests and linting automatically upon every push to the repository.", technologies: ["GitHub Actions", "YAML", "Testing Framework (Mock)"], features: ["Testing matrix setup", "Linting check", "Dependency caching"], liveUrl: "#", githubUrl: "#" },
+            { id: 58, title: "Monitoring Database Performance", category: "DevOps", description: "Setting up basic performance monitoring for a PostgreSQL instance using built-in tools (Conceptual).", technologies: ["PostgreSQL", "System Monitoring"], features: ["Query duration tracking", "Connection count monitoring", "Indexing best practices"], liveUrl: "#", githubUrl: "#" },
+            { id: 59, title: "Cross-Cloud Deployment Strategy", category: "DevOps", description: "Conceptual plan and setup for deploying a single application across AWS and Azure for redundancy.", technologies: ["Multi-Cloud", "Terraform", "Networking"], features: ["DNS routing setup", "Geographic redundancy planning", "Cloud provider resource naming"], liveUrl: "#", githubUrl: "#" },
+            { id: 60, title: "Microservice API Gateway Setup", category: "DevOps", description: "Implementing an API Gateway (e.g., Kong, Nginx) to handle routing, authentication, and rate limiting for microservices.", technologies: ["API Gateway (Conceptual)", "Docker", "Authentication"], features: ["Request routing rules", "JWT authentication setup", "Rate limiting policy"], liveUrl: "#", githubUrl: "#" }
+        ];
+        
+        // Pagination
+        let currentPage = 1;
+        const projectsPerPage = 9;
+        let filteredProjects = [...projectsData];
+        
+        // DOM Elements
+        const projectsGrid = document.getElementById('projects-grid');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+        const pageInfo = document.getElementById('page-info');
+        const modal = document.getElementById('project-modal');
+        
+        // Initialize
+        displayProjects();
+        setupEventListeners();
+        
+        /**
+         * Determines the color class for the project badge based on category.
+         * @param {string} category 
+         * @returns {string} Tailwind CSS class string
+         */
+        function getBadgeClass(category) {
+            switch (category) {
+                case 'Web Designs':
+                    // Purple Badge
+                    return 'bg-purple-100 text-purple-800';
+                case 'Applications':
+                    // Green Badge
+                    return 'bg-green-100 text-green-800';
+                case 'DevOps':
+                    // Blue Badge
+                    return 'bg-blue-100 text-blue-800';
+                default:
+                    return 'bg-gray-100 text-gray-800';
+            }
+        }
+        
+        function displayProjects() {
+            projectsGrid.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * projectsPerPage;
+            const endIndex = startIndex + projectsPerPage;
+            const currentProjects = filteredProjects.slice(startIndex, endIndex);
+            
+            if (currentProjects.length === 0) {
+                projectsGrid.innerHTML = `
+                    <div class="no-projects">
+                        <i data-feather="folder" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-2">No projects found</h3>
+                        <p class="text-gray-400">Try selecting a different filter</p>
+                    </div>
+                `;
+                feather.replace();
+                return;
+            }
+            
+            currentProjects.forEach(project => {
+                const projectCard = createProjectCard(project);
+                projectsGrid.appendChild(projectCard);
+            });
+            
+            updatePagination();
+            feather.replace();
+        }
+        
+        function createProjectCard(project) {
+            const card = document.createElement('div');
+            card.className = 'project-card bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl border border-gray-700';
+            card.dataset.category = project.category;
+            
+            const badgeClass = getBadgeClass(project.category);
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-3">
+                    <h4 class="text-xl font-bold text-white">${project.title}</h4>
+                    <span class="category-badge ${badgeClass}">${project.category}</span>
+                </div>
+                <p class="text-gray-400 mb-4">${project.description.substring(0, 100)}...</p>
+                <div class="flex flex-wrap gap-1 mb-4">
+                    ${project.technologies.slice(0, 3).map(tech => 
+                        `<span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full">${tech}</span>`
+                    ).join('')}
+                    ${project.technologies.length > 3 ? 
+                        `<span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full">+${project.technologies.length - 3}</span>` : ''
+                    }
+                </div>
+                <div class="flex justify-between items-center">
+                    <button class="view-details-btn text-sm text-indigo-400 hover:text-indigo-300 font-medium flex items-center"
+                            data-id="${project.id}">
+                        View Details <i data-feather="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                    <div class="flex space-x-2">
+                        <a href="${project.liveUrl}" target="_blank" class="p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors" title="Live Demo" onclick="event.stopPropagation()">
+                            <i data-feather="external-link" class="w-4 h-4"></i>
+                        </a>
+                        <a href="${project.githubUrl}" target="_blank" class="p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors" title="View Code" onclick="event.stopPropagation()">
+                            <i data-feather="github" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            // Make entire card clickable
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('a') && !e.target.closest('.view-details-btn')) {
+                    const projectId = project.id;
+                    const projectData = projectsData.find(p => p.id === projectId);
+                    openModal(projectData);
+                }
+            });
+            
+            return card;
+        }
+        
+        function setupEventListeners() {
+            // Filter buttons - Using project1's simpler logic
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active style from all buttons
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
+                        btn.classList.add('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
+                    });
+                    
+                    // Add active style to clicked button
+                    this.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
+                    this.classList.remove('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
+                    
+                    // Get filter value
+                    const filter = this.dataset.filter;
+                    
+                    // Filter projects based on category
+                    if (filter === 'All') {
+                        filteredProjects = [...projectsData];
+                    } else {
+                        filteredProjects = projectsData.filter(project => project.category === filter);
+                    }
+                    
+                    // Reset to first page and display
+                    currentPage = 1;
+                    displayProjects();
+                });
+            });
+            
+            // Pagination
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayProjects();
+                }
+            });
+            
+            nextButton.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayProjects();
+                }
+            });
+            
+            // View details buttons (event delegation)
+            projectsGrid.addEventListener('click', (e) => {
+                if (e.target.classList.contains('view-details-btn') || e.target.closest('.view-details-btn')) {
+                    const button = e.target.closest('.view-details-btn');
+                    const projectId = parseInt(button.dataset.id);
+                    const project = projectsData.find(p => p.id === projectId);
+                    openModal(project);
+                }
+            });
+            
+            // Close modal when clicking outside (project1's approach)
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+        
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages;
+        }
+        
+        /**
+         * Opens the modal with details for the selected project.
+         * This function is called directly from the project card HTML.
+         * @param {Object} project - The project data object
+         */
+        function openModal(project) {
+            // Set content
+            document.getElementById('modal-title').textContent = project.title;
+            
+            const badgeElement = document.getElementById('modal-badge');
+            badgeElement.textContent = project.category;
+            badgeElement.className = `category-badge ${getBadgeClass(project.category)}`;
+            
+            document.getElementById('modal-description').textContent = project.description;
+            
+            // Set technologies
+            const techContainer = document.getElementById('modal-tech');
+            techContainer.innerHTML = project.technologies.map(tech => 
+                `<span class="text-sm bg-gray-700 text-gray-300 px-3 py-1 rounded-md font-medium">${tech}</span>`
+            ).join('');
+            
+            // Set features
+            const featuresContainer = document.getElementById('modal-features');
+            featuresContainer.innerHTML = project.features.map(feature => 
+                `<li class="flex items-start"><i data-feather="check-circle" class="w-5 h-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"></i><span>${feature}</span></li>`
+            ).join('');
+            
+            // Set links
+            document.getElementById('modal-live').href = project.liveUrl !== '#' ? project.liveUrl : 'javascript:void(0)';
+            document.getElementById('modal-github').href = project.githubUrl !== '#' ? project.githubUrl : 'javascript:void(0)';
+            
+            // Show modal
+            modal.style.display = 'block';
+            feather.replace();
+        }
+        
+        // Expose openModal globally for onclick attribute
+        window.openModal = openModal;
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+        <!-- WhatsApp Chat Button -->
+    <a href="https://wa.me/27604881413" 
+       target="_blank" 
+       class="fixed bottom-6 right-6 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-2xl hover:shadow-green-500/30 hover:scale-110 transition-all duration-300 z-40 group"
+       aria-label="Chat on WhatsApp">
+        <i data-feather="message-circle" class="w-7 h-7 text-white"></i>
+        <div class="absolute -top-12 right-0 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+            Chat with me on WhatsApp
+        </div>
+    </a>
+
+    <script>
+        // Re-initialize Feather Icons to include the WhatsApp icon
+        feather.replace();
+        
+        // WhatsApp chat initialization (optional enhanced functionality)
+        document.addEventListener('DOMContentLoaded', function() {
+            const whatsappBtn = document.querySelector('a[href*="wa.me"]');
+            
+            // Add click tracking (optional)
+            whatsappBtn.addEventListener('click', function() {
+                console.log('WhatsApp chat initiated');
+                // You can add analytics here if needed
+            });
+            
+            // Ensure WhatsApp button stays on top of Vanta.js
+            const vantaContainer = document.getElementById('vanta-bg');
+            if (vantaContainer) {
+                whatsappBtn.style.zIndex = '9999';
+            }
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>
